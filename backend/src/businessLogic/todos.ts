@@ -17,9 +17,9 @@ export async function getTodoById(todoId: string, userId: string) : Promise<any>
     return await todoAccess.getTodoById(todoId, userId)
 }  
 
-// export async function getUploadUrl(todoId: string): Promise<string> {
-//     return await todoAccess.getUploadUrl(todoId)
-// } 
+export async function getUploadUrl(todoId: string): Promise<string> {
+    return await todoAccess.getUploadUrl(todoId)
+} 
 
 export async function createTodo(
     createTodoRequest: CreateTodoRequest,
@@ -39,6 +39,6 @@ export async function createTodo(
     })
 }
 
-// export async function getTodosForUser(userId: string) : Promise<TodoItem[]>{
-//     return await todoAccess.getTodosForUser(userId)
-// }  
+export async function getTodosForUser(userId: string) : Promise<TodoItem[]>{
+    return await todoAccess.getTodosForUser(userId)
+}  

@@ -17,11 +17,11 @@ export const handler = middy(
 
     logger.info(`user id ${userId} makes a request to create todo`)
 
-    const todoItem = await createTodo(newTodo, userId)
+    const todo = await createTodo(newTodo, userId)
     return {
       statusCode: 201,
       body: JSON.stringify({
-        todoItem
+        todo
       })
     }
   }

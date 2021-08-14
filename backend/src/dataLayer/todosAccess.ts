@@ -24,25 +24,25 @@ export class TodosAccess {
         ){
     }
 
-    // async getTodoById(todoId: string, userId: string): Promise<AWS.DynamoDB.QueryOutput>{
-    //     return await this.docClient.query({
-    //         TableName: this.todosTable,
-    //         IndexName: this.createdAtIndex,
-    //         KeyConditionExpression: 'todoId = :todoId and userId = :userId',
-    //         ExpressionAttributeValues:{
-    //             ':todoId': todoId,
-    //             ":userId": userId
-    //         }
-    //     }).promise()   
-    // }
+    async getTodoById(todoId: string, userId: string): Promise<AWS.DynamoDB.QueryOutput>{
+        return await this.docClient.query({
+            TableName: this.todosTable,
+            IndexName: this.createdAtIndex,
+            KeyConditionExpression: 'todoId = :todoId and userId = :userId',
+            ExpressionAttributeValues:{
+                ':todoId': todoId,
+                ":userId": userId
+            }
+        }).promise()   
+    }
 
-    // async getUploadUrl(todoId: string): Promise<string>{
-    //     return await s3.getSignedUrl('putObject', {
-    //         Bucket: this.bucketName,
-    //         Key: todoId,
-    //         Expires: this.urlExpiration
-    //       }) as string ;
-    // }
+    async getUploadUrl(todoId: string): Promise<string>{
+        return await s3.getSignedUrl('putObject', {
+            Bucket: this.bucketName,
+            Key: todoId,
+            Expires: this.urlExpiration
+          }) as string ;
+    }
 
     async createTodo(todoItem: TodoItem): Promise<TodoItem>{
         await this.docClient.put({
@@ -53,17 +53,17 @@ export class TodosAccess {
         return todoItem
     }
 
-    // async getTodosForUser(userId: string): Promise<TodoItem[]> {
-    //    const result = await this.docClient.query({
-    //       TableName: this.todosTable,
-    //       IndexName: this.createdAtIndex,
-    //       KeyConditionExpression: 'userId = :userId',
-    //       ExpressionAttributeValues:{
-    //           ":userId": userId
-    //       }
-    //     }).promise() 
+    async getTodosForUser(userId: string): Promise<TodoItem[]> {
+       const result = await this.docClient.query({
+          TableName: this.todosTable,
+          IndexName: this.createdAtIndex,
+          KeyConditionExpression: 'userId = :userId',
+          ExpressionAttributeValues:{
+              ":userId": userId
+          }
+        }).promise() 
         
-    //     return result.Items as TodoItem[]
-    // }
+        return result.Items as TodoItem[]
+    }
 
 }
