@@ -10,14 +10,13 @@ import { getTodoById, getUploadUrl } from '../../businessLogic/todos'
 // import { createAttachmentPresignedUrl } from '../../businessLogic/todos'
 import { getUserId } from '../utils'
 
-const logger = createLogger('todo')
+const logger = createLogger('lambda:generateUploadUrl')
 
 export const handler = middy(
   async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
     const todoId = event.pathParameters.todoId
     const userId = getUserId(event)
 
-    // TODO: Return a presigned URL to upload a file for a TODO item with the provided id
     if(!todoId){
       logger.error(`todo id ${todoId} is missing`)
       return {
@@ -48,7 +47,8 @@ export const handler = middy(
     }
 
     const url = await getUploadUrl(todoId);
-
+    
+    logger.info(`Getting signed URL ${url} for todo id ${todoId}`)
 
     return {
       statusCode: 200,

@@ -8,15 +8,18 @@ import { updateTodo } from '../../businessLogic/todos'
 import { UpdateTodoRequest } from '../../requests/UpdateTodoRequest'
 import { getUserId } from '../utils'
 
+const logger =  createLogger('lambda:updateTodo');
+
 export const handler = middy(
   async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
     const todoId = event.pathParameters.todoId
     const updatedTodo: UpdateTodoRequest = JSON.parse(event.body)
-    // TODO: Update a TODO item with the provided id using values in the "updatedTodo" object
     const userId = getUserId(event)
 
     if (!todoId) {
-      // logger.error(`todo id ${todoId} is missing`)
+      
+      logger.error(`todo id ${todoId} is missing`)
+      
       return {
         statusCode: 400,
         body: JSON.stringify({
@@ -24,6 +27,8 @@ export const handler = middy(
         }) 
       }
     }
+
+    logger.info(`user id ${userId} makes a request to update todo id ${todoId}`)
 
     await updateTodo(todoId, userId, updatedTodo)
 

@@ -5,11 +5,9 @@ import { TodoItem } from '../models/TodoItem'
 import { UpdateTodoRequest } from '../requests/UpdateTodoRequest'
 import { createLogger } from '../utils/logger'
 import * as uuid from 'uuid'
-// import * as createError from 'http-errors'
 
-const logger = createLogger('auth')
+const logger = createLogger('businessLogic:todos')
 
-// TODO: Implement businessLogic
 const todoAccess = new TodosAccess()
 const bucketName = process.env.ATTACHMENT_S3_BUCKET
 
