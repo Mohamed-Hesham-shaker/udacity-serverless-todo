@@ -25,6 +25,7 @@ export class TodosAccess {
     }
 
     async getTodoById(todoId: string, userId: string): Promise<AWS.DynamoDB.QueryOutput>{
+        
         return await this.docClient.query({
             TableName: this.todosTable,
             IndexName: this.createdAtIndex,
@@ -37,6 +38,7 @@ export class TodosAccess {
     }
 
     async getUploadUrl(todoId: string): Promise<string>{
+        
         return await s3.getSignedUrl('putObject', {
             Bucket: this.bucketName,
             Key: todoId,
@@ -45,6 +47,7 @@ export class TodosAccess {
     }
 
     async createTodo(todoItem: TodoItem): Promise<TodoItem>{
+        
         await this.docClient.put({
             TableName: this.todosTable,
             Item: todoItem
@@ -54,6 +57,7 @@ export class TodosAccess {
     }
 
     async getTodosForUser(userId: string): Promise<TodoItem[]> {
+       
        const result = await this.docClient.query({
           TableName: this.todosTable,
           IndexName: this.createdAtIndex,
@@ -64,6 +68,16 @@ export class TodosAccess {
         }).promise() 
         
         return result.Items as TodoItem[]
+    }
+
+    async deleteTodo(todoId: string, userId: string) {
+        await this.docClient.delete({
+            TableName: this.todosTable,
+            Key: {
+              todoId,
+              userId
+            }
+        }).promise() 
     }
 
 }
