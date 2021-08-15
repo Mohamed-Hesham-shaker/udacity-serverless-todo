@@ -2,7 +2,7 @@ import * as AWS from 'aws-sdk'
 import { DocumentClient } from 'aws-sdk/clients/dynamodb'
 // import { createLogger } from '../utils/logger'
 import { TodoItem } from '../models/TodoItem'
-// import { TodoUpdate } from '../models/TodoUpdate';
+import { TodoUpdate } from '../models/TodoUpdate';
 
 
 const AWSXRay = require('aws-xray-sdk')
@@ -71,6 +71,7 @@ export class TodosAccess {
     }
 
     async deleteTodo(todoId: string, userId: string) {
+        
         await this.docClient.delete({
             TableName: this.todosTable,
             Key: {
@@ -78,6 +79,28 @@ export class TodosAccess {
               userId
             }
         }).promise() 
+    }
+
+    async updateTodo(todoId: string, userId: string, updatedTodo: TodoUpdate){
+         
+        await this.docClient.update({
+            TableName: this.todosTable,
+            Key: {
+              todoId,
+              userId
+            },
+            UpdateExpression: 'set #name = :name, #dueDate = :dueDate, #done = :done',
+            ExpressionAttributeNames: {
+              '#name': 'name',
+              '#dueDate': 'dueDate',
+              '#done': 'done'
+            },
+            ExpressionAttributeValues: {
+                ':name': updatedTodo.name,
+                ':dueDate': updatedTodo.dueDate,
+                ':done': updatedTodo.done
+            }
+        }).promise()    
     }
 
 }
