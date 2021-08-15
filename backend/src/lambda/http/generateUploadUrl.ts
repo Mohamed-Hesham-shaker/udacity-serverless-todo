@@ -4,10 +4,8 @@ import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda'
 import * as middy from 'middy'
 import { cors } from 'middy/middlewares'
 import { createLogger } from '../../utils/logger'
-import { getTodoById, getUploadUrl } from '../../businessLogic/todos'
-
-
-// import { createAttachmentPresignedUrl } from '../../businessLogic/todos'
+import { getTodoById } from '../../businessLogic/todos'
+import { createAttachmentPresignedUrl } from '../../businessLogic/todos'
 import { getUserId } from '../utils'
 
 const logger = createLogger('lambda:generateUploadUrl')
@@ -46,7 +44,7 @@ export const handler = middy(
       }
     }
 
-    const url = await getUploadUrl(todoId);
+    const url = await createAttachmentPresignedUrl(todoId);
     
     logger.info(`Getting signed URL ${url} for todo id ${todoId}`)
 
