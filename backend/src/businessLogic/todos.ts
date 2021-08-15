@@ -41,4 +41,8 @@ export async function createTodo(
 
 export async function getTodosForUser(userId: string) : Promise<TodoItem[]>{
     return await todoAccess.getTodosForUser(userId)
-}  
+} 
+
+export async function deleteTodo(todoId: string, userId: string){
+    return await todoAccess.deleteTodo(todoId, userId)
+}
