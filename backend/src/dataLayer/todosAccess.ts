@@ -7,9 +7,6 @@ import { TodoUpdate } from '../models/TodoUpdate';
 
 const AWSXRay = require('aws-xray-sdk')
 const XAWS = AWSXRay.captureAWS(AWS)
-const s3 = new XAWS.S3({
-    signatureVersion: 'v4'
-})
   
 const logger = createLogger('dataLayer:todosAccess')
 
@@ -17,9 +14,7 @@ export class TodosAccess {
     constructor(
         private readonly docClient: DocumentClient = new XAWS.DynamoDB.DocumentClient(),
         private readonly todosTable = process.env.TODOS_TABLE,
-        private readonly bucketName = process.env.ATTACHMENT_S3_BUCKET,
-        private readonly urlExpiration = process.env.SIGNED_URL_EXPIRATION, 
-        private readonly createdAtIndex = process.env.CREATED_AT_INDEX
+        private readonly createdAtIndex = process.env.CREATED_AT_INDEX 
         ){
     }
 
@@ -38,14 +33,7 @@ export class TodosAccess {
         }).promise()   
     }
 
-    async getUploadUrl(todoId: string): Promise<string>{
-        
-        return await s3.getSignedUrl('putObject', {
-            Bucket: this.bucketName,
-            Key: todoId,
-            Expires: this.urlExpiration
-          }) as string ;
-    }
+    
 
     async createTodo(todoItem: TodoItem): Promise<TodoItem>{
         
