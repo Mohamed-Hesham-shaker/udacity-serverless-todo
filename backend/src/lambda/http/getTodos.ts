@@ -7,14 +7,18 @@ import { cors } from 'middy/middlewares'
 import { getTodosForUser as getTodosForUser } from '../../businessLogic/todos'
 import { getUserId } from '../utils';
 
-// TODO: Get all TODO items for a current user
+const logger = createLogger('lambda:getTodos')
+
 export const handler = middy(
   async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
-    // Write your code here
     const userId = getUserId(event)
-
+    
+    logger.info(`User ${userId} is requesting his todos items`)
+    
     const items = await getTodosForUser(userId);
 
+    logger.info(`Getting todos items ${items} of ${userId}`)
+    
     return {
       statusCode: 200,
       body: JSON.stringify({

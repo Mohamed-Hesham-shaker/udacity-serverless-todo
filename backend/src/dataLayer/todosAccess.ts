@@ -1,6 +1,6 @@
 import * as AWS from 'aws-sdk'
 import { DocumentClient } from 'aws-sdk/clients/dynamodb'
-// import { createLogger } from '../utils/logger'
+import { createLogger } from '../utils/logger'
 import { TodoItem } from '../models/TodoItem'
 import { TodoUpdate } from '../models/TodoUpdate';
 
@@ -11,9 +11,8 @@ const s3 = new XAWS.S3({
     signatureVersion: 'v4'
 })
   
-// const logger = createLogger(' ')
+const logger = createLogger('dataLayer:todosAccess')
 
-// TODO: Implement the dataLayer logic
 export class TodosAccess {
     constructor(
         private readonly docClient: DocumentClient = new XAWS.DynamoDB.DocumentClient(),
@@ -26,6 +25,8 @@ export class TodosAccess {
 
     async getTodoById(todoId: string, userId: string): Promise<AWS.DynamoDB.QueryOutput>{
         
+        logger.info(`Getting todo item by id ${todoId} for user ${userId}`)
+
         return await this.docClient.query({
             TableName: this.todosTable,
             IndexName: this.createdAtIndex,
@@ -52,7 +53,7 @@ export class TodosAccess {
             TableName: this.todosTable,
             Item: todoItem
         }).promise()
-
+        
         return todoItem
     }
 
@@ -79,6 +80,8 @@ export class TodosAccess {
               userId
             }
         }).promise() 
+        
+        logger.info(`Deleted todo ${todoId} for user ${userId}`)
     }
 
     async updateTodo(todoId: string, userId: string, updatedTodo: TodoUpdate){
@@ -100,7 +103,9 @@ export class TodosAccess {
                 ':dueDate': updatedTodo.dueDate,
                 ':done': updatedTodo.done
             }
-        }).promise()    
+        }).promise()
+        
+        logger.info(`Updated todo ${todoId} for user ${userId}`) 
     }
 
 }
